@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquaMonitor – Monitoramento de pH</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Chart.js (CDN, loaded before app so Chart is available globally) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+
+  <!-- Styles: design tokens first, then base, then components, then pages -->
+  <link rel="stylesheet" href="src/styles/theme.css">
+  <link rel="stylesheet" href="src/styles/base.css">
+  <link rel="stylesheet" href="src/components/navbar/index.css">
+  <link rel="stylesheet" href="src/components/footer/index.css">
+  <link rel="stylesheet" href="src/pages/home/index.css">
+  <link rel="stylesheet" href="src/pages/selecoes/index.css">
+</head>
+<body>
+
+<!-- ════════ LOGIN ════════ -->
+<div id="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#001a14" stroke-width="2.2">
+          <path d="M12 2C6 8 4 11 4 15a8 8 0 0016 0c0-4-2-7-8-13z"/>
+          <path d="M12 12v5M10 14l2 3 2-3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>Aqua<span style="color:var(--accent)">Monitor</span></h1>
+      <p>Sistema de Monitoramento de pH</p>
+    </div>
+
+    <!-- Login -->
+    <div id="form-login">
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" value="admin@aquamonitor.com">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" id="login-pass" placeholder="••••••••" value="123456">
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Entrar no Sistema</button>
+      <div class="login-alt">Não tem conta? <a onclick="toggleForm('register')">Criar conta</a></div>
+    </div>
+
+    <!-- Register -->
+    <div id="form-register" style="display:none">
+      <div class="form-group">
+        <label>Nome Completo</label>
+        <input type="text" placeholder="João da Silva">
+      </div>
+      <div class="form-group">
+        <label>E-mail</label>
+        <input type="email" placeholder="seu@email.com">
+      </div>
+      <div class="form-group">
+        <label>Senha</label>
+        <input type="password" placeholder="Mín. 8 caracteres">
+      </div>
+      <div class="form-group">
+        <label>Confirmar Senha</label>
+        <input type="password" placeholder="Repita a senha">
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Criar Conta</button>
+      <div class="login-alt">Já tem conta? <a onclick="toggleForm('login')">Entrar</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ APP ════════ -->
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="logo-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#001a14" stroke-width="2.5">
+          <path d="M12 2C6 8 4 11 4 15a8 8 0 0016 0c0-4-2-7-8-13z"/>
+        </svg>
+      </div>
+      AquaMonitor
+    </div>
+
+    <select class="pool-selector" id="pool-select">
+      <option value="0">Piscina Principal (25m)</option>
+      <option value="1">Piscina Infantil (10m)</option>
+      <option value="2">Piscina Olímpica (50m)</option>
+    </select>
+
+    <div class="topbar-spacer"></div>
+
+    <div class="notif-btn" id="notif-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span class="notif-badge" id="notif-count">2</span>
+    </div>
+
+    <div class="user-chip">
+      <div class="user-avatar">JS</div>
+      <span class="user-name">João Silva</span>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="nav-label">Principal</div>
+      <button class="nav-item active" data-page="dashboard">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+          <rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-page="graficos">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        Gráficos
+      </button>
+      <button class="nav-item" data-page="historico">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        Histórico
+      </button>
+
+      <div class="nav-label">Sistema</div>
+      <button class="nav-item" data-page="alertas">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Alertas
+        <span id="alert-nav-badge" style="margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;">2</span>
+      </button>
+      <button class="nav-item" data-page="config">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        Configurações
+      </button>
+
+      <div class="sidebar-bottom">
+        <button class="logout-btn" id="btn-logout">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          Sair
+        </button>
+      </div>
+    </nav>
+
+    <!-- CONTENT: pages injected here by page modules -->
+    <main class="content" id="main-content">
+
+      <!-- Dashboard (home page, already in DOM) -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-header">
+          <h2 id="dash-pool-title">Piscina Principal</h2>
+          <p id="dash-pool-sub">Última leitura: há 3 minutos · Sensor online</p>
+        </div>
+
+        <div class="alert-banner hidden" id="main-alert-banner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+          <span id="main-alert-text"></span>
+        </div>
+
+        <div class="gauges-row">
+          <div class="gauge-card" id="ph-gauge-card">
+            <div class="gauge-title">pH Atual</div>
+            <div class="gauge-svg-wrap">
+              <svg width="160" height="100" viewBox="0 0 160 100">
+                <defs>
+                  <linearGradient id="gaugeGradOk" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%"   stop-color="#ff3f5a"/>
+                    <stop offset="30%"  stop-color="#f5a623"/>
+                    <stop offset="50%"  stop-color="#00d4a8"/>
+                    <stop offset="70%"  stop-color="#f5a623"/>
+                    <stop offset="100%" stop-color="#ff3f5a"/>
+                  </linearGradient>
+                </defs>
+                <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="#1c2e48"          stroke-width="10" stroke-linecap="round"/>
+                <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="url(#gaugeGradOk)" stroke-width="10" stroke-linecap="round" opacity=".3"/>
+                <line id="ph-needle" x1="80" y1="90" x2="80" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" transform="rotate(0,80,90)"/>
+                <circle cx="80" cy="90" r="5" fill="white"/>
+                <text x="14"  y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">6</text>
+                <text x="73"  y="22" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">8</text>
+                <text x="143" y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">10</text>
+              </svg>
+              <div class="gauge-value">
+                <span class="val" id="ph-val">7.45</span>
+                <span class="unit">pH</span>
+              </div>
+            </div>
+            <div class="gauge-range"><span>6.0</span><span>Normal: 7.2 – 7.8</span><span>10.0</span></div>
+            <div class="gauge-status ok" id="ph-status">Normal</div>
+          </div>
+
+          <div class="gauge-card" id="cl-gauge-card">
+            <div class="gauge-title">Cloro Residual</div>
+            <div class="gauge-svg-wrap">
+              <svg width="160" height="100" viewBox="0 0 160 100">
+                <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="#1c2e48"          stroke-width="10" stroke-linecap="round"/>
+                <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="url(#gaugeGradOk)" stroke-width="10" stroke-linecap="round" opacity=".3"/>
+                <line id="cl-needle" x1="80" y1="90" x2="80" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" transform="rotate(0,80,90)"/>
+                <circle cx="80" cy="90" r="5" fill="white"/>
+                <text x="14"  y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">0</text>
+                <text x="73"  y="22" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">2</text>
+                <text x="140" y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">5</text>
+              </svg>
+              <div class="gauge-value">
+                <span class="val" id="cl-val">1.20</span>
+                <span class="unit">ppm</span>
+              </div>
+            </div>
+            <div class="gauge-range"><span>0 ppm</span><span>Normal: 0.5 – 3.0 ppm</span><span>5 ppm</span></div>
+            <div class="gauge-status ok" id="cl-status">Normal</div>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">Temperatura</div>
+            <div class="stat-value" id="stat-temp">28.3°C</div>
+            <div class="stat-sub">Dentro do esperado</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Última Leitura</div>
+            <div class="stat-value" id="stat-last">14:32</div>
+            <div class="stat-sub">Há 3 minutos</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Leituras Hoje</div>
+            <div class="stat-value" id="stat-count">48</div>
+            <div class="stat-sub">A cada 30 min</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Status Geral</div>
+            <div class="stat-value" id="stat-status" style="color:var(--ok)">OK</div>
+            <div class="stat-sub" id="stat-status-sub">Piscina liberada</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h3>Variação de pH — Últimas 24h</h3>
+          </div>
+          <div class="chart-container">
+            <canvas id="mini-chart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Remaining pages: injected from selecoes/index.html via fetch in main.js -->
+      <div id="selecoes-pages"></div>
+
+    </main>
+  </div>
+</div>
+
+<!-- NOTIFICATIONS PANEL -->
+<div class="tooltip-panel" id="notif-panel">
+  <h4>Notificações</h4>
+  <div class="tooltip-notif">
+    <div class="tn-dot danger"></div>
+    <div>
+      <div class="tn-text">Piscina Infantil: pH 8.1 — acima do limite (7.8)</div>
+      <div class="tn-time">Há 12 minutos</div>
+    </div>
+  </div>
+  <div class="tooltip-notif">
+    <div class="tn-dot danger"></div>
+    <div>
+      <div class="tn-text">Piscina Infantil: Cloro 0.3 ppm — abaixo do mínimo (0.5)</div>
+      <div class="tn-time">Há 12 minutos</div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap: ES module so imports work natively -->
+<script type="module" src="src/app/main.js"></script>
+
+</body>
+</html>

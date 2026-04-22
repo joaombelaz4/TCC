@@ -1,0 +1,73 @@
+/* ── ALERT BANNER ─────────────────────────────────────── */
+.alert-banner {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: 10px; margin-bottom: 20px;
+  font-size: 13px; font-weight: 500;
+  animation: fadeIn .3s ease;
+}
+.alert-banner.warn   { background: #f5a62318; border: 1px solid #f5a62340; color: var(--warn); }
+.alert-banner.danger { background: #ff3f5a18; border: 1px solid #ff3f5a40; color: var(--danger); }
+.alert-banner.ok     { background: #00d4a818; border: 1px solid #00d4a840; color: var(--ok); }
+.alert-banner.hidden { display: none; }
+
+/* ── GAUGE CARDS ──────────────────────────────────────── */
+.gauges-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-bottom: 16px;
+}
+@media (max-width: 700px) { .gauges-row { grid-template-columns: 1fr; } }
+
+.gauge-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px;
+  display: flex; flex-direction: column; align-items: center;
+  transition: border-color .2s;
+}
+.gauge-card.ok     { border-color: #00d4a830; }
+.gauge-card.warn   { border-color: #f5a62330; }
+.gauge-card.danger { border-color: #ff3f5a30; }
+
+.gauge-title {
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 16px; align-self: flex-start;
+}
+.gauge-svg-wrap { position: relative; width: 160px; height: 100px; }
+.gauge-value {
+  position: absolute; bottom: 0; left: 50%;
+  transform: translateX(-50%); text-align: center;
+}
+.gauge-value .val {
+  display: block; font-family: var(--mono); font-size: 30px;
+  line-height: 1; color: #fff; letter-spacing: -1px;
+}
+.gauge-value .unit { font-size: 11px; color: var(--muted); font-weight: 500; }
+.gauge-range {
+  display: flex; justify-content: space-between; width: 160px;
+  font-size: 10px; color: var(--muted); margin-top: 8px;
+}
+.gauge-status {
+  margin-top: 12px; padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+}
+.gauge-status.ok     { background: #00d4a820; color: var(--ok); }
+.gauge-status.warn   { background: #f5a62320; color: var(--warn); }
+.gauge-status.danger { background: #ff3f5a20; color: var(--danger); }
+
+/* ── STATS ROW ────────────────────────────────────────── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 20px;
+}
+@media (max-width: 800px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 18px;
+}
+.stat-card .stat-label {
+  font-size: 11px; color: var(--muted); font-weight: 600;
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 8px;
+}
+.stat-card .stat-value { font-family: var(--mono); font-size: 20px; color: #fff; }
+.stat-card .stat-sub   { font-size: 11px; color: var(--muted); margin-top: 4px; }

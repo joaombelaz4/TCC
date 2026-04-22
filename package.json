@@ -1,0 +1,15 @@
+{
+  "name": "aquamonitor",
+  "version": "1.0.0",
+  "description": "Sistema de monitoramento de pH para piscinas",
+  "type": "module",
+  "scripts": {
+    "dev":   "npx serve . --listen 3000",
+    "lint":  "npx eslint src/**/*.js",
+    "build": "echo 'Add a bundler (Vite/esbuild) here when ready'"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "serve":  "^14.2.3"
+  }
+}

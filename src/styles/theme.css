@@ -1,0 +1,16 @@
+:root {
+  --bg:      #07090f;
+  --surface: #0c1220;
+  --card:    #111b2e;
+  --card2:   #162035;
+  --border:  #1c2e48;
+  --accent:  #00d4a8;
+  --accent2: #0090ff;
+  --warn:    #f5a623;
+  --danger:  #ff3f5a;
+  --ok:      #00d4a8;
+  --text:    #c8d6e8;
+  --muted:   #4a607a;
+  --font:    'Exo 2', sans-serif;
+  --mono:    'Share Tech Mono', monospace;
+}

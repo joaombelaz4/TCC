@@ -1,0 +1,102 @@
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <h2 id="dash-pool-title">Piscina Principal</h2>
+    <p id="dash-pool-sub">Última leitura: há 3 minutos · Sensor online</p>
+  </div>
+
+  <div class="alert-banner hidden" id="main-alert-banner">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+      <line x1="12" y1="9" x2="12" y2="13"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    <span id="main-alert-text"></span>
+  </div>
+
+  <div class="gauges-row">
+    <!-- pH Gauge -->
+    <div class="gauge-card" id="ph-gauge-card">
+      <div class="gauge-title">pH Atual</div>
+      <div class="gauge-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <defs>
+            <linearGradient id="gaugeGradOk" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%"   stop-color="#ff3f5a"/>
+              <stop offset="30%"  stop-color="#f5a623"/>
+              <stop offset="50%"  stop-color="#00d4a8"/>
+              <stop offset="70%"  stop-color="#f5a623"/>
+              <stop offset="100%" stop-color="#ff3f5a"/>
+            </linearGradient>
+          </defs>
+          <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="#1c2e48"         stroke-width="10" stroke-linecap="round"/>
+          <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="url(#gaugeGradOk)" stroke-width="10" stroke-linecap="round" opacity=".3"/>
+          <line id="ph-needle" x1="80" y1="90" x2="80" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" transform="rotate(0,80,90)"/>
+          <circle cx="80" cy="90" r="5" fill="white"/>
+          <text x="14"  y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">6</text>
+          <text x="73"  y="22" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">8</text>
+          <text x="143" y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">10</text>
+        </svg>
+        <div class="gauge-value">
+          <span class="val" id="ph-val">7.45</span>
+          <span class="unit">pH</span>
+        </div>
+      </div>
+      <div class="gauge-range"><span>6.0</span><span>Normal: 7.2 – 7.8</span><span>10.0</span></div>
+      <div class="gauge-status ok" id="ph-status">Normal</div>
+    </div>
+
+    <!-- Cloro Gauge -->
+    <div class="gauge-card" id="cl-gauge-card">
+      <div class="gauge-title">Cloro Residual</div>
+      <div class="gauge-svg-wrap">
+        <svg width="160" height="100" viewBox="0 0 160 100">
+          <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="#1c2e48"         stroke-width="10" stroke-linecap="round"/>
+          <path d="M 16 90 A 64 64 0 0 1 144 90" fill="none" stroke="url(#gaugeGradOk)" stroke-width="10" stroke-linecap="round" opacity=".3"/>
+          <line id="cl-needle" x1="80" y1="90" x2="80" y2="36" stroke="white" stroke-width="2" stroke-linecap="round" transform="rotate(0,80,90)"/>
+          <circle cx="80" cy="90" r="5" fill="white"/>
+          <text x="14"  y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">0</text>
+          <text x="73"  y="22" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">2</text>
+          <text x="140" y="98" font-family="'Share Tech Mono'" font-size="9" fill="#4a607a">5</text>
+        </svg>
+        <div class="gauge-value">
+          <span class="val" id="cl-val">1.20</span>
+          <span class="unit">ppm</span>
+        </div>
+      </div>
+      <div class="gauge-range"><span>0 ppm</span><span>Normal: 0.5 – 3.0 ppm</span><span>5 ppm</span></div>
+      <div class="gauge-status ok" id="cl-status">Normal</div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Temperatura</div>
+      <div class="stat-value" id="stat-temp">28.3°C</div>
+      <div class="stat-sub">Dentro do esperado</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Última Leitura</div>
+      <div class="stat-value" id="stat-last">14:32</div>
+      <div class="stat-sub">Há 3 minutos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Leituras Hoje</div>
+      <div class="stat-value" id="stat-count">48</div>
+      <div class="stat-sub">A cada 30 min</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Status Geral</div>
+      <div class="stat-value" id="stat-status" style="color:var(--ok)">OK</div>
+      <div class="stat-sub" id="stat-status-sub">Piscina liberada</div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <h3>Variação de pH — Últimas 24h</h3>
+    </div>
+    <div class="chart-container">
+      <canvas id="mini-chart"></canvas>
+    </div>
+  </div>
+</div>
