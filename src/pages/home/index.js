@@ -1,6 +1,6 @@
 import { PH_MIN, PH_MAX, CL_MIN, CL_MAX } from '../../config/env.js';
-import { getPool }                          from '../../services/selecoes.service.js';
-import { statusLabel, genPhSeries, genLabels24h } from '../../utils/formatters.js';
+import { getPool, getPoolHistory }          from '../../services/selecoes.service.js';
+import { statusLabel }                     from '../../utils/formatters.js';
 import { phStatus, clStatus }              from '../../utils/validators.js';
 
 /** Injects the dashboard HTML into the content area (called once by the router). */
@@ -30,8 +30,8 @@ const chartBase = {
 };
 
 /** Updates all dashboard DOM elements for the current pool. */
-export function updateDashboard(poolIdx) {
-  const p   = getPool(poolIdx);
+export async function updateDashboard(poolIdx) {
+  const p   = await getPool(poolIdx);
   const ps  = phStatus(p.pH);
   const cs  = clStatus(p.cl);
   const overall = ps === 'danger' || cs === 'danger' ? 'danger'
@@ -83,22 +83,44 @@ export function updateDashboard(poolIdx) {
 }
 
 /** Renders (or re-renders) the mini sparkline chart. */
-export function renderMiniChart(poolIdx) {
+export async function renderMiniChart(poolIdx) {
   const ctx = document.getElementById('mini-chart');
   if (!ctx) return;
 
+  const chartContainer = ctx.parentElement;
   if (miniChartInst) { miniChartInst.destroy(); miniChartInst = null; }
 
-  const p    = getPool(poolIdx);
-  const vals = genPhSeries(p.pH, 48);
+  const rows = await getPoolHistory(poolIdx, 48);
+  if (!rows.length) {
+    if (chartContainer) {
+      chartContainer.innerHTML = `
+        <div class="empty-state">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+          <p>Sem histórico de pH para esta piscina.</p>
+        </div>`;
+    }
+    return;
+  }
 
-  miniChartInst = new Chart(ctx, {
+  if (chartContainer) {
+    chartContainer.innerHTML = '<canvas id="mini-chart"></canvas>';
+  }
+
+  const canvas = document.getElementById('mini-chart');
+  const history = [...rows].reverse();
+  const vals = history.map(r => r.ph);
+  const labels = history.map(r => r.time);
+
+  miniChartInst = new Chart(canvas, {
     type: 'line',
     data: {
-      labels: genLabels24h(),
+      labels,
       datasets: [
-        { data: Array(48).fill(PH_MAX), borderColor: '#ff3f5a30', borderDash: [4, 4], pointRadius: 0, fill: false, borderWidth: 1 },
-        { data: Array(48).fill(PH_MIN), borderColor: '#ff3f5a30', borderDash: [4, 4], pointRadius: 0, fill: false, borderWidth: 1 },
+        { data: Array(vals.length).fill(PH_MAX), borderColor: '#ff3f5a30', borderDash: [4, 4], pointRadius: 0, fill: false, borderWidth: 1 },
+        { data: Array(vals.length).fill(PH_MIN), borderColor: '#ff3f5a30', borderDash: [4, 4], pointRadius: 0, fill: false, borderWidth: 1 },
         {
           data: vals, borderColor: '#00d4a8', borderWidth: 2, pointRadius: 0, tension: .3,
           fill: true,

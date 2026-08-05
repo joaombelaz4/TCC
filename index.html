@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AquaMonitor – Monitoramento de pH</title>
+  <title>pHaura – Monitoramento de pH</title>
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -32,7 +32,7 @@
           <path d="M12 12v5M10 14l2 3 2-3" stroke-linecap="round"/>
         </svg>
       </div>
-      <h1>Aqua<span style="color:var(--accent)">Monitor</span></h1>
+      <h1>pH<span style="color:var(--accent)">aura</span></h1>
       <p>Sistema de Monitoramento de pH</p>
     </div>
 
@@ -100,7 +100,7 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/>
       </svg>
-      <span class="notif-badge" id="notif-count">2</span>
+      <span class="notif-badge" id="notif-count">0</span>
     </div>
 
     <div class="user-chip">
@@ -144,7 +144,7 @@
           <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
         Alertas
-        <span id="alert-nav-badge" style="margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;">2</span>
+        <span id="alert-nav-badge" style="display:none;margin-left:auto;background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;">0</span>
       </button>
       <button class="nav-item" data-page="config">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
@@ -280,18 +280,9 @@
 <!-- NOTIFICATIONS PANEL -->
 <div class="tooltip-panel" id="notif-panel">
   <h4>Notificações</h4>
-  <div class="tooltip-notif">
-    <div class="tn-dot danger"></div>
-    <div>
-      <div class="tn-text">Piscina Infantil: pH 8.1 — acima do limite (7.8)</div>
-      <div class="tn-time">Há 12 minutos</div>
-    </div>
-  </div>
-  <div class="tooltip-notif">
-    <div class="tn-dot danger"></div>
-    <div>
-      <div class="tn-text">Piscina Infantil: Cloro 0.3 ppm — abaixo do mínimo (0.5)</div>
-      <div class="tn-time">Há 12 minutos</div>
+  <div id="notif-items">
+    <div class="empty-state">
+      <p>Buscando notificações reais do sistema...</p>
     </div>
   </div>
 </div>

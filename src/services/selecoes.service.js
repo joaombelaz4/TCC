@@ -1,42 +1,38 @@
-import { pools, allAlerts } from '../config/env.js';
-import { genHistory } from '../utils/formatters.js';
+import { get, post } from './http.js';
 
-/** Pre-generate history for every pool once on load */
-const poolHistories = pools.map(p => genHistory(p.cl));
+let poolsCache = null;
 
-/** Returns a shallow copy of all pools */
-export function getPools() {
-  return pools;
+export async function getPools(forceReload = false) {
+  if (forceReload || !poolsCache) {
+    poolsCache = await get('/api/pools');
+  }
+  return poolsCache;
 }
 
-/**
- * Returns one pool by index.
- * @param {number} idx
- */
-export function getPool(idx) {
+export async function getPool(idx) {
+  const pools = await getPools();
   return pools[idx];
 }
 
-/** Returns the static alert log */
-export function getAlerts() {
-  return allAlerts;
+export async function getPoolHistory(idx, limit = 1000) {
+  const pools = await getPools();
+  const pool = pools[idx];
+  if (!pool) return [];
+  return get(`/api/pools/${pool.id}/history?limit=${limit}`);
 }
 
-/**
- * Returns the pre-generated history for one pool.
- * @param {number} idx
- */
-export function getPoolHistory(idx) {
-  return poolHistories[idx];
+export async function getAlerts() {
+  return get('/api/alerts');
 }
 
-/**
- * Simulates sensor drift — call on a setInterval in main.js.
- * In production this would be replaced by a real API poll.
- */
-export function tickSensorReadings() {
-  pools.forEach(p => {
-    p.pH = Math.max(6.5, Math.min(9.5, +(p.pH + (Math.random() - 0.5) * 0.03).toFixed(2)));
-    p.cl = Math.max(0.1, Math.min(4.5, +(p.cl + (Math.random() - 0.5) * 0.02).toFixed(2)));
-  });
+export async function getSettings() {
+  return get('/api/settings');
+}
+
+export async function saveSettings(settings) {
+  return post('/api/settings', settings);
+}
+
+export function clearPoolsCache() {
+  poolsCache = null;
 }
