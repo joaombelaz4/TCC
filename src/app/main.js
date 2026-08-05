@@ -1,5 +1,4 @@
-import { initNavbar } from '../components/navbar/index.js';
-import { getAlerts, getPools } from '../services/selecoes.service.js';
+import { initNavbar }             from '../components/navbar/index.js';
 import { updateDashboard, renderMiniChart } from '../pages/home/index.js';
 import {
   renderMainChart,
@@ -9,14 +8,17 @@ import {
   initSelecoes,
   destroyCharts,
 } from '../pages/selecoes/index.js';
+import { getAlerts, getPools } from '../services/selecoes.service.js';
 
+// ── State ─────────────────────────────────────────────────
 let currentPool = 0;
-let appReady = false;
+let appReady    = false;
 
+// ── Login / Logout ────────────────────────────────────────
 function doLogin() {
   const screen = document.getElementById('login-screen');
   screen.style.transition = 'opacity .4s';
-  screen.style.opacity = '0';
+  screen.style.opacity    = '0';
 
   setTimeout(() => {
     screen.style.display = 'none';
@@ -26,12 +28,8 @@ function doLogin() {
     app.style.transition = 'opacity .4s';
     setTimeout(() => (app.style.opacity = '1'), 50);
 
-    if (!appReady) {
-      bootApp().then(() => { appReady = true; });
-    } else {
-      updateDashboard(currentPool);
-      renderMiniChart(currentPool);
-    }
+    if (!appReady) { bootApp().then(() => { appReady = true; }); }
+    else           { updateDashboard(currentPool); renderMiniChart(currentPool); }
   }, 400);
 }
 
@@ -44,20 +42,13 @@ function doLogout() {
   setTimeout(() => (ls.style.opacity = '1'), 50);
 }
 
+// ── Routing ───────────────────────────────────────────────
 const PAGE_HANDLERS = {
-  dashboard: async () => {
-    await updateDashboard(currentPool);
-    await renderMiniChart(currentPool);
-  },
-  graficos: async () => {
-    setTimeout(async () => {
-      await renderMainChart(currentPool);
-      await renderClChart(currentPool);
-    }, 100);
-  },
+  dashboard: async () => { await updateDashboard(currentPool); await renderMiniChart(currentPool); },
+  graficos:  async () => { setTimeout(async () => { await renderMainChart(currentPool); await renderClChart(currentPool); }, 100); },
   historico: async () => await renderHistoryTable(currentPool),
-  alertas: async () => await renderAlerts(),
-  config: () => {},
+  alertas:   async () => await renderAlerts(),
+  config:    () => {},
 };
 
 function showPage(name) {
@@ -112,7 +103,6 @@ async function populatePoolSelect() {
     select.innerHTML = pools.map((pool, idx) => `
       <option value="${idx}">${pool.name} (${pool.size})</option>
     `).join('');
-
     if (pools.length > 0) {
       currentPool = Math.min(currentPool, pools.length - 1);
       select.value = currentPool;
@@ -122,25 +112,30 @@ async function populatePoolSelect() {
   }
 }
 
+// ── Pool switch ───────────────────────────────────────────
 async function switchPool(idx) {
   currentPool = idx;
   destroyCharts();
+
+  // Re-render whatever page is currently visible
   const active = document.querySelector('.page.active');
   if (active) {
     const name = active.id.replace('page-', '');
-    PAGE_HANDLERS[name]?.();
+    await PAGE_HANDLERS[name]?.();
   }
 }
 
+// ── Boot ──────────────────────────────────────────────────
 async function bootApp() {
-  const res = await fetch('src/pages/selecoes/index.html');
+  // Injeta o HTML das páginas secundárias antes de qualquer init
+  const res  = await fetch('src/pages/selecoes/index.html');
   const html = await res.text();
   document.getElementById('selecoes-pages').innerHTML = html;
 
   initNavbar({
-    onNavigate: showPage,
+    onNavigate:   showPage,
     onPoolChange: switchPool,
-    onLogout: doLogout,
+    onLogout:     doLogout,
   });
 
   await populatePoolSelect();
@@ -157,6 +152,7 @@ async function bootApp() {
     }
   }, 30000);
 }
+
 
 function toggleForm(which) {
   document.getElementById('form-login').style.display = which === 'login' ? '' : 'none';
